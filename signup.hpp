@@ -25,10 +25,10 @@ CONTRACT signup : public eosio::contract {
   public:
     using contract::contract;
 
-    ACTION transfer( name   from,
-                     name   to,
-                     asset  quantity,
-                     string memo );
+    ACTION dummy();
+
+    [[eosio::on_notify("eosio.token::transfer")]]
+    void on_transfer( name from, name to, asset quantity, string memo );
 
     signup( name receiver, name code, datastream<const char*> ds ):
       contract( receiver, code, ds ) {}

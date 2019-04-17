@@ -1,6 +1,8 @@
 #include "extra.cpp"
 
-void signup::transfer( name from, name to, asset quantity, string memo ) {
+void signup::dummy() { print("DUMMY"); }
+
+void signup::on_transfer( name from, name to, asset quantity, string memo ) {
   // do nothing on outgoing transfers
   if (from == _self || to != _self) {
     return;
@@ -145,14 +147,3 @@ void signup::transfer( name from, name to, asset quantity, string memo ) {
   // Notify a partner about this newly created account
   require_recipient(PARTNER);
 }
-
-//EOSIO_DISPATCH(signup, (transfer))
-// custom dispatcher:
-// https://developers.eos.io/eosio-home/docs/writing-a-custom-dispatcher
-extern "C" {
-  void apply(uint64_t receiver, uint64_t code, uint64_t action) {
-    if(code==name("eosio.token").value && action==name("transfer").value) {
-      execute_action(name(receiver), name(code), &signup::transfer );
-    }
-  }
-};

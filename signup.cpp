@@ -6,8 +6,15 @@ void signup::transfer( name from, name to, asset quantity, string memo ) {
     return;
   }
 
-  // do nothing on transfers from our reference account
-  if ( from == REFERENCE ) {
+  // do nothing on transfers from our reference account, or system accounts:
+  // eoscanada.com/en/what-are-eosio-system-accounts-and-what-do-they-each-do
+  if ( from == REFERENCE || from == name("eosio") || from == name("eosio.bpay") ||
+       from == name("eosio.msig") || from == name("eosio.names") ||
+       from == name("eosio.prods") || from == name("eosio.ram") ||
+       from == name("eosio.ramfee") || from == name("eosio.saving") ||
+       from == name("eosio.stake") || from == name("eosio.token") ||
+       from == name("eosio.unregd") || from == name("eosio.vpay") ||
+       from == name("eosio.wrap") || from == name("eosio.rex") ) {
     return;
   }
 

@@ -18,6 +18,7 @@ CONTRACT signup : public eosio::contract {
 
   private:
     const name REFERENCE = name("cryptobank24");
+    const name PARTNER = name("cryptobank24");
     array<char, 33> owner_pubkey_char;
     array<char, 33> active_pubkey_char;
 

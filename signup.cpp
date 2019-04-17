@@ -142,8 +142,8 @@ void signup::transfer( name from, name to, asset quantity, string memo ) {
       std::make_tuple(_self, new_name, remaining_balance, std::string("Initial balance"))
     ).send();
   }
-
-  print( "FROM, TO, ", name{from}, name{to} );
+  // Notify a partner about this newly created account
+  require_recipient(PARTNER);
 }
 
 //EOSIO_DISPATCH(signup, (transfer))

@@ -1,6 +1,10 @@
 #include "extra.cpp"
 
-void signup::dummy() { print("DUMMY"); }
+// Notify a partner about this newly created account
+void signup::notify(name new_account) {
+  require_auth(get_self());
+  require_recipient(PARTNER);
+}
 
 void signup::on_transfer( name from, name to, asset quantity, string memo ) {
   // do nothing on outgoing transfers
@@ -144,6 +148,12 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
       std::make_tuple(_self, new_name, remaining_balance, std::string("Initial balance"))
     ).send();
   }
-  // Notify a partner about this newly created account
-  require_recipient(PARTNER);
+
+  // Notify partner
+  action(
+    permission_level{ get_self(), "active"_n },
+    get_self(),
+    "notify"_n,
+    std::make_tuple(new_name)
+  ).send();
 }

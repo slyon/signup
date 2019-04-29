@@ -25,7 +25,7 @@ CONTRACT signup : public eosio::contract {
   public:
     using contract::contract;
 
-    ACTION dummy();
+    ACTION notify(name new_account);
 
     [[eosio::on_notify("eosio.token::transfer")]]
     void on_transfer( name from, name to, asset quantity, string memo );

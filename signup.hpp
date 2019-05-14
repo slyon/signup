@@ -11,6 +11,7 @@ using namespace std;
 using namespace eosio;
 
 const symbol EOS_S = symbol("EOS", 4);
+const symbol TLOS_S = symbol("TLOS", 4);
 const symbol RAMCORE_S = symbol("RAMCORE", 4);
 const symbol RAM_S = symbol("RAM", 0);
 

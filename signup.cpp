@@ -24,7 +24,7 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
     return;
   }
 
-  eosio::check(quantity.symbol == EOS_S, "Must be payed in EOS");
+  eosio::check(quantity.symbol == TLOS_S, "Must be payed in TLOS");
   eosio::check(quantity.is_valid(), "Invalid token transfer");
   eosio::check(quantity.amount > 0, "Quantity must be positive");
 
@@ -74,23 +74,23 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
   asset fee;
   const asset ram_replace_amount = buyrambytes(256);
   if(plan_id == 1) {
-    eosio::check(quantity.amount >= 20000, "Pice too low");
-    cpu = asset(2000, EOS_S);
-    net = asset(1000, EOS_S);
-    ram = buyrambytes(3 * 1024);
-    fee = asset(1000, EOS_S);
-  } else if(plan_id == 2) {
-    eosio::check(quantity.amount >= 50000, "Pice too low");
-    cpu = asset(5000, EOS_S);
-    net = asset(1000, EOS_S);
-    ram = buyrambytes(4 * 1024);
-    fee = asset(2000, EOS_S);
-  } else if(plan_id == 3) {
     eosio::check(quantity.amount >= 100000, "Pice too low");
-    cpu = asset(10000, EOS_S);
-    net = asset(5000, EOS_S);
+    cpu = asset(9000, TLOS_S);
+    net = asset(1000, TLOS_S);
+    ram = buyrambytes(3 * 1024);
+    fee = asset(10000, TLOS_S);
+  } else if(plan_id == 2) {
+    eosio::check(quantity.amount >= 500000, "Pice too low");
+    cpu = asset(25000, TLOS_S);
+    net = asset(5000, TLOS_S);
+    ram = buyrambytes(4 * 1024);
+    fee = asset(40000, TLOS_S);
+  } else if(plan_id == 3) {
+    eosio::check(quantity.amount >= 1000000, "Pice too low");
+    cpu = asset(50000, TLOS_S);
+    net = asset(10000, TLOS_S);
     ram = buyrambytes(8 * 1024);
-    fee = asset(3000, EOS_S);
+    fee = asset(70000, TLOS_S);
   } else {
     eosio::check(false, "Invalid plan ID");
   }

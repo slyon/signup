@@ -6,5 +6,5 @@ asset buyrambytes(uint32_t bytes) {
   auto itr = market.find(RAMCORE_S.raw());
   eosio::check(itr != market.end(), "RAMCORE market not found");
   auto tmp = *itr;
-  return tmp.convert(asset(bytes, RAM_S), EOS_S);
+  return tmp.convert(asset(bytes, RAM_S), TLOS_S);
 }

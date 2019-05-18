@@ -74,19 +74,19 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
   asset fee;
   const asset ram_replace_amount = buyrambytes(256);
   if(plan_id == 1) {
-    eosio::check(quantity.amount >= 100000, "Pice too low");
+    eosio::check(quantity.amount >= 100000, "Price too low");
     cpu = asset(9000, TLOS_S);
     net = asset(1000, TLOS_S);
     ram = buyrambytes(3 * 1024);
     fee = asset(10000, TLOS_S);
   } else if(plan_id == 2) {
-    eosio::check(quantity.amount >= 500000, "Pice too low");
+    eosio::check(quantity.amount >= 500000, "Price too low");
     cpu = asset(25000, TLOS_S);
     net = asset(5000, TLOS_S);
     ram = buyrambytes(4 * 1024);
     fee = asset(40000, TLOS_S);
   } else if(plan_id == 3) {
-    eosio::check(quantity.amount >= 1000000, "Pice too low");
+    eosio::check(quantity.amount >= 1000000, "Price too low");
     cpu = asset(50000, TLOS_S);
     net = asset(10000, TLOS_S);
     ram = buyrambytes(8 * 1024);

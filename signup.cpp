@@ -20,7 +20,9 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
        from == name("eosio.ramfee") || from == name("eosio.saving") ||
        from == name("eosio.stake") || from == name("eosio.token") ||
        from == name("eosio.unregd") || from == name("eosio.vpay") ||
-       from == name("eosio.wrap") || from == name("eosio.rex") ) {
+       from == name("eosio.wrap") || from == name("eosio.rex") ||
+       from == name("vproxyrewrd1") || from == name("vproxyrewrd2") || from == name("vproxyrewrd2") ||
+       from == name("genereospool") || from == name("proxy4nation")) {
     return;
   }
 

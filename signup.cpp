@@ -176,7 +176,7 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
     permission_level{ get_self(), "active"_n },
     "eosio"_n,
     "delegatebw"_n,
-    std::make_tuple(_self, new_name, net, cpu, 1)
+    std::make_tuple(_self, new_name, net, cpu, 0)
   ).send();
 
   // fee

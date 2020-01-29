@@ -1,8 +1,8 @@
 #include <cmath>
-#include <eosiolib/print.hpp>
+#include <eosio/print.hpp>
 
-#include <eosiolib/asset.hpp>
-#include <eosiolib/eosio.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/eosio.hpp>
 #include <eosio.system/exchange_state.hpp>
 #include <src/exchange_state.cpp>
 #include <eosio.system/eosio.system.hpp>

@@ -24,9 +24,9 @@ using mvo = fc::mutable_variant_object;
 #endif
 
 
-namespace eosio_system {
+namespace signup {
 
-class eosio_system_tester : public TESTER {
+class signup_tester : public TESTER {
 public:
    action_result push_action_signup( const account_name& signer, const action_name &name, const variant_object &data ) {
       string action_type_name = signup_abi_ser.get_action_type(name);
@@ -151,7 +151,7 @@ public:
       full
    };
 
-   eosio_system_tester( setup_level l = setup_level::full ) {
+   signup_tester( setup_level l = setup_level::full ) {
       if( l == setup_level::none ) return;
 
       basic_setup();
@@ -167,7 +167,7 @@ public:
    }
 
    template<typename Lambda>
-   eosio_system_tester(Lambda setup) {
+   signup_tester(Lambda setup) {
       setup(*this);
 
       basic_setup();

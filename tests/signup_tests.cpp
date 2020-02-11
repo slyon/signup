@@ -23,13 +23,13 @@ struct connector {
 };
 FC_REFLECT( connector, (balance)(weight) );
 
-using namespace eosio_system;
+using namespace signup;
 
 BOOST_AUTO_TEST_SUITE(signup_tests)
 
 bool within_one(int64_t a, int64_t b) { return std::abs(a - b) <= 1; }
 
-BOOST_FIXTURE_TEST_CASE( buy_and_claim, eosio_system_tester ) try {
+BOOST_FIXTURE_TEST_CASE( buy_and_claim, signup_tester ) try {
    cross_15_percent_threshold();
    // prepare liquid balance
    transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
@@ -88,7 +88,7 @@ BOOST_FIXTURE_TEST_CASE( buy_and_claim, eosio_system_tester ) try {
    BOOST_REQUIRE_EQUAL( success(), unstake( new_acc, core_sym::from_string("0.1000"), core_sym::from_string("0.2000") ) );
 } FC_LOG_AND_RETHROW()
 
-BOOST_FIXTURE_TEST_CASE( claim_and_refund, eosio_system_tester ) try {
+BOOST_FIXTURE_TEST_CASE( claim_and_refund, signup_tester ) try {
    cross_15_percent_threshold();
    // prepare liquid balance
    transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
@@ -184,7 +184,7 @@ BOOST_FIXTURE_TEST_CASE( claim_and_refund, eosio_system_tester ) try {
    */
 } FC_LOG_AND_RETHROW()
 
-BOOST_FIXTURE_TEST_CASE( proxy_staking_rewards, eosio_system_tester ) try {
+BOOST_FIXTURE_TEST_CASE( proxy_staking_rewards, signup_tester ) try {
    cross_15_percent_threshold();
    // prepare liquid balance
    transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );

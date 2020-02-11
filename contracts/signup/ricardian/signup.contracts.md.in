@@ -4,7 +4,7 @@
 spec_version: "0.2.0"
 title: Notify Partner
 summary: 'Activate protocol feature {{nowrap feature_digest}}'
-icon: @ICON_BASE_URL@/@ADMIN_ICON_URI@
+icon: @ICON_BASE_URL@/@MULTISIG_ICON_URI@
 ---
 
 {{$action.account}} activates the protocol feature with a digest of {{feature_digest}}.
@@ -15,7 +15,7 @@ icon: @ICON_BASE_URL@/@ADMIN_ICON_URI@
 spec_version: "0.2.0"
 title: Claim Resources
 summary: 'Claim reserved resources of {{nowrap user}} account'
-icon: @ICON_BASE_URL@/@VOTING_ICON_URI@
+icon: @ICON_BASE_URL@/@MULTISIG_ICON_URI@
 ---
 
 Claim reserved resources of {{user}} account.
@@ -28,7 +28,7 @@ Claim reserved resources of {{user}} account.
 spec_version: "0.2.0"
 title: Refund Stake
 summary: 'Activate protocol feature {{nowrap feature_digest}}'
-icon: @ICON_BASE_URL@/@ADMIN_ICON_URI@
+icon: @ICON_BASE_URL@/@MULTISIG_ICON_URI@
 ---
 
 {{$action.account}} activates the protocol feature with a digest of {{feature_digest}}.

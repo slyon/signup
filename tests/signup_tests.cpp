@@ -123,65 +123,6 @@ BOOST_FIXTURE_TEST_CASE( claim_and_refund, signup_tester ) try {
    BOOST_REQUIRE_EQUAL( success(), signup_refund( N(alice1111111) ) );
    BOOST_REQUIRE_EQUAL( success(), signup_claim( N(alice1111111) ) );
    BOOST_REQUIRE_EQUAL( core_sym::from_string("0.0000"), get_balance( "cointreasury" ) );
-
-   //-------------------------------
-/*
-   auto acc = get_balance("jimmyparker1");
-   std::cout << "Account: " << acc << "\n";
-
-   auto rlm = control->get_resource_limits_manager();
-   auto jimmyparker1_ram_usage = rlm.get_account_ram_usage(N(jimmyparker1));
-
-   BOOST_REQUIRE_EQUAL( true, jimmyparker1_ram_usage > 0 );
-
-   //std::cout << "jimmyparker1 RAM: " << jimmyparker1_ram_usage << " bytes\n";
-
-
-   auto userres1 = get_total_stake( N(alice1111111) );
-   std::cout << "userres1: " << userres1 << "\n";
-   auto userres1c = get_total_stake( N(cointreasury) );
-   std::cout << "userres1c: " << userres1c << "\n";
-   auto bal1a = get_balance( "alice1111111" );
-   std::cout << "balance: " << bal1a << "\n";
-   auto bal1c = get_balance( "cointreasury" );
-   std::cout << "balance: " << bal1c << "\n";
-   BOOST_REQUIRE_EQUAL( success(), stake( "cointreasury", "alice1111111", core_sym::from_string("1.0000"), core_sym::from_string("1.0000") ) );
-   auto userres2 = get_total_stake( N(alice1111111) );
-   std::cout << "userres2: " << userres2 << "\n";
-   auto userres2c = get_total_stake( N(cointreasury) );
-   std::cout << "userres2c: " << userres2c << "\n";
-   //TODO: verify delegated stake
-   auto dbw = get_dbw_obj( N(cointreasury), N(alice1111111) );
-   std::cout << "dbw: " << dbw << "\n";
-
-   auto bal1 = get_balance( "alice1111111" );
-   std::cout << "balance: " << bal1 << "\n";
-   // CLAIM
-   BOOST_REQUIRE_EQUAL( success(), signup_claim( N(alice1111111) ) );
-
-   auto refund_req = get_refund_request( N(cointreasury) );
-   std::cout << "refund_req: " << refund_req << "\n";
-
-   auto dbw2 = get_dbw_obj( N(cointreasury), N(alice1111111) );
-   std::cout << "dbw2: " << dbw2 << "\n";
-
-   auto bal2 = get_balance( "alice1111111" );
-   std::cout << "balance: " << bal2 << "\n";
-   auto userres3 = get_total_stake( N(alice1111111) );
-   std::cout << "userres3: " << userres3 << "\n";
-   auto userres3c = get_total_stake( N(cointreasury) );
-   std::cout << "userres3c: " << userres3c << "\n";
-   //TODO: verify transfered stake
-
-   auto balc1 = get_balance( "cointreasury" );
-   std::cout << "balc1: " << balc1 << "\n";
-   BOOST_REQUIRE_EQUAL( wasm_assert_msg("Refund is not available yet."), signup_refund( N(alice1111111) ) );
-   produce_block( fc::hours(3*24) );
-   BOOST_REQUIRE_EQUAL( success(), signup_refund( N(alice1111111) ) );
-   BOOST_REQUIRE_EQUAL( wasm_assert_msg("No refund request found."), signup_refund( N(alice1111111) ) );
-   auto balc2 = get_balance( "cointreasury" );
-   std::cout << "balc2: " << balc2 << "\n";
-   */
 } FC_LOG_AND_RETHROW()
 
 BOOST_FIXTURE_TEST_CASE( proxy_staking_rewards, signup_tester ) try {

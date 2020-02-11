@@ -382,31 +382,9 @@ public:
       return cpu;
    };
 
-   action_result deposit( const account_name& owner, const asset& amount ) {
-      return push_action( name(owner), N(deposit), mvo()
-                          ("owner",  owner)
-                          ("amount", amount)
-      );
-   }
-
-   action_result withdraw( const account_name& owner, const asset& amount ) {
-      return push_action( name(owner), N(withdraw), mvo()
-                          ("owner",  owner)
-                          ("amount", amount)
-      );
-   }
-
    fc::variant get_dbw_obj( const account_name& from, const account_name& receiver ) const {
       vector<char> data = get_row_by_account( config::system_account_name, from, N(delband), receiver );
       return data.empty() ? fc::variant() : abi_ser.binary_to_variant("delegated_bandwidth", data, abi_serializer_max_time);
-   }
-
-   action_result bidname( const account_name& bidder, const account_name& newname, const asset& bid ) {
-      return push_action( name(bidder), N(bidname), mvo()
-                          ("bidder",  bidder)
-                          ("newname", newname)
-                          ("bid", bid)
-                          );
    }
 
    static fc::variant_object producer_parameters_example( int n ) {

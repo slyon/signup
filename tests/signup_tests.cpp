@@ -164,4 +164,115 @@ BOOST_FIXTURE_TEST_CASE( proxy_staking_rewards, signup_tester ) try {
    BOOST_REQUIRE_EQUAL( success(), tx );
 } FC_LOG_AND_RETHROW()
 
+BOOST_FIXTURE_TEST_CASE( create_basic_01, signup_tester ) try {
+   cross_15_percent_threshold();
+   // prepare liquid balance
+   transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("100.0000"), get_balance( "alice1111111" ) );
+   transfer( "eosio", "cointreasury", core_sym::from_string("100.0000"), "eosio" ); //liquid
+   transfer( "eosio", "cointreasury", core_sym::from_string("10.0000"), "eosio" ); //RAM
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("110.0000"), get_balance( "cointreasury" ) );
+
+   // prepare RAM and stake
+   BOOST_REQUIRE_EQUAL( success(), buyram( "cointreasury", "cointreasury", core_sym::from_string("10.0000") ) );
+   auto stake_cointreasury = stake( "eosio", "cointreasury", core_sym::from_string("10.0000"), core_sym::from_string("10.0000") );
+   BOOST_REQUIRE_EQUAL( success(), stake_cointreasury );
+
+   // create "Basic" (01) account
+   name new_acc = name("jimmyparker1");
+   std::string memo = "01:"+new_acc.to_string()+":EOS7QaaUfuxjGzW4mYs6LoQBuEhVEh2sJXLXzoQHhx6HsKDuHNJsv:EOS77mv92nFMXGqSTU6WDFrNAJzfNuBcr7wanr5ewag4jUs4npfbK";
+   auto tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("1.9999"), memo);
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Price too low"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("2.0001"), "INVALID MEMO");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Malformed Memo (invalid length)"), tx);
+   //TODO: check more error cases
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("2.0000"), "");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("to account does not exist"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("2.0000"), memo);
+   BOOST_REQUIRE_EQUAL(success(), tx);
+
+   // verify new_acc was successfuly created with correct stake
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("1.0000"), "");
+   BOOST_REQUIRE_EQUAL(success(), tx);
+   auto new_res = get_total_stake( new_acc );
+   BOOST_REQUIRE_EQUAL(new_res["owner"], new_acc.to_string());
+   BOOST_REQUIRE_EQUAL(new_res["net_weight"], core_sym::from_string("0.1000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["cpu_weight"], core_sym::from_string("0.2000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["ram_bytes"], "3051"); //TODO: verify which (exact) amount is needed
+} FC_LOG_AND_RETHROW()
+
+BOOST_FIXTURE_TEST_CASE( create_standard_02, signup_tester ) try {
+   cross_15_percent_threshold();
+   // prepare liquid balance
+   transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("100.0000"), get_balance( "alice1111111" ) );
+   transfer( "eosio", "cointreasury", core_sym::from_string("100.0000"), "eosio" ); //liquid
+   transfer( "eosio", "cointreasury", core_sym::from_string("10.0000"), "eosio" ); //RAM
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("110.0000"), get_balance( "cointreasury" ) );
+
+   // prepare RAM and stake
+   BOOST_REQUIRE_EQUAL( success(), buyram( "cointreasury", "cointreasury", core_sym::from_string("10.0000") ) );
+   auto stake_cointreasury = stake( "eosio", "cointreasury", core_sym::from_string("10.0000"), core_sym::from_string("10.0000") );
+   BOOST_REQUIRE_EQUAL( success(), stake_cointreasury );
+
+   // create "Standard" (02) account
+   name new_acc = name("jimmyparker1");
+   std::string memo = "02:"+new_acc.to_string()+":EOS7QaaUfuxjGzW4mYs6LoQBuEhVEh2sJXLXzoQHhx6HsKDuHNJsv:EOS77mv92nFMXGqSTU6WDFrNAJzfNuBcr7wanr5ewag4jUs4npfbK";
+   auto tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("4.9999"), memo);
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Price too low"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("5.0001"), "INVALID MEMO");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Malformed Memo (invalid length)"), tx);
+   //TODO: check more error cases
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("5.0000"), "");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("to account does not exist"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("5.0000"), memo);
+   BOOST_REQUIRE_EQUAL(success(), tx);
+
+   // verify new_acc was successfuly created with correct stake
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("1.0000"), "");
+   BOOST_REQUIRE_EQUAL(success(), tx);
+   auto new_res = get_total_stake( new_acc );
+   BOOST_REQUIRE_EQUAL(new_res["owner"], new_acc.to_string());
+   BOOST_REQUIRE_EQUAL(new_res["net_weight"], core_sym::from_string("0.1000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["cpu_weight"], core_sym::from_string("0.5000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["ram_bytes"], "4074"); //TODO: verify which (exact) amount is needed
+} FC_LOG_AND_RETHROW()
+
+BOOST_FIXTURE_TEST_CASE( create_pro_03, signup_tester ) try {
+   cross_15_percent_threshold();
+   // prepare liquid balance
+   transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("100.0000"), get_balance( "alice1111111" ) );
+   transfer( "eosio", "cointreasury", core_sym::from_string("100.0000"), "eosio" ); //liquid
+   transfer( "eosio", "cointreasury", core_sym::from_string("10.0000"), "eosio" ); //RAM
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("110.0000"), get_balance( "cointreasury" ) );
+
+   // prepare RAM and stake
+   BOOST_REQUIRE_EQUAL( success(), buyram( "cointreasury", "cointreasury", core_sym::from_string("10.0000") ) );
+   auto stake_cointreasury = stake( "eosio", "cointreasury", core_sym::from_string("10.0000"), core_sym::from_string("10.0000") );
+   BOOST_REQUIRE_EQUAL( success(), stake_cointreasury );
+
+   // create "Pro" (03) account
+   name new_acc = name("jimmyparker1");
+   std::string memo = "03:"+new_acc.to_string()+":EOS7QaaUfuxjGzW4mYs6LoQBuEhVEh2sJXLXzoQHhx6HsKDuHNJsv:EOS77mv92nFMXGqSTU6WDFrNAJzfNuBcr7wanr5ewag4jUs4npfbK";
+   auto tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("9.9999"), memo);
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Price too low"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("10.0001"), "INVALID MEMO");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("Malformed Memo (invalid length)"), tx);
+   //TODO: check more error cases
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("10.0000"), "");
+   BOOST_REQUIRE_EQUAL(wasm_assert_msg("to account does not exist"), tx);
+   tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("10.0000"), memo);
+   BOOST_REQUIRE_EQUAL(success(), tx);
+
+   // verify new_acc was successfuly created with correct stake
+   tx = transfer_tok( N(eosio), new_acc, core_sym::from_string("1.0000"), "");
+   BOOST_REQUIRE_EQUAL(success(), tx);
+   auto new_res = get_total_stake( new_acc );
+   BOOST_REQUIRE_EQUAL(new_res["owner"], new_acc.to_string());
+   BOOST_REQUIRE_EQUAL(new_res["net_weight"], core_sym::from_string("0.5000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["cpu_weight"], core_sym::from_string("1.0000").to_string());
+   BOOST_REQUIRE_EQUAL(new_res["ram_bytes"], "8149"); //TODO: verify which (exact) amount is needed
+} FC_LOG_AND_RETHROW()
+
 BOOST_AUTO_TEST_SUITE_END()

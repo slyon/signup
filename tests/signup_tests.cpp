@@ -275,4 +275,38 @@ BOOST_FIXTURE_TEST_CASE( create_pro_03, signup_tester ) try {
    BOOST_REQUIRE_EQUAL(new_res["ram_bytes"], "8149"); //TODO: verify which (exact) amount is needed
 } FC_LOG_AND_RETHROW()
 
+BOOST_FIXTURE_TEST_CASE( ram_needs, signup_tester ) try {
+   cross_15_percent_threshold();
+   // prepare liquid balance
+   transfer( "eosio", "alice1111111", core_sym::from_string("100.0000"), "eosio" );
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("100.0000"), get_balance( "alice1111111" ) );
+   transfer( "eosio", "cointreasury", core_sym::from_string("100.0000"), "eosio" ); //liquid
+   transfer( "eosio", "cointreasury", core_sym::from_string("10.0000"), "eosio" ); //RAM
+   BOOST_REQUIRE_EQUAL( core_sym::from_string("110.0000"), get_balance( "cointreasury" ) );
+
+   // prepare RAM and stake
+   BOOST_REQUIRE_EQUAL( success(), buyram( "cointreasury", "cointreasury", core_sym::from_string("10.0000") ) );
+   auto stake_cointreasury = stake( "eosio", "cointreasury", core_sym::from_string("10.0000"), core_sym::from_string("10.0000") );
+   BOOST_REQUIRE_EQUAL( success(), stake_cointreasury );
+
+   // calculate free RAM before new account creation
+   auto rlm = control->get_resource_limits_manager();
+   auto ram_usage_before = rlm.get_account_ram_usage(N(cointreasury));
+   int64_t ram_limit_before, ram_limit_after, unused;
+   rlm.get_account_limits(N(cointreasury), ram_limit_before, unused, unused);
+   int64_t free_ram_before = ram_limit_before - ram_usage_before;
+
+   // create a account
+   name new_acc = name("jimmyparker1");
+   std::string memo = "03:"+new_acc.to_string()+":EOS7QaaUfuxjGzW4mYs6LoQBuEhVEh2sJXLXzoQHhx6HsKDuHNJsv:EOS77mv92nFMXGqSTU6WDFrNAJzfNuBcr7wanr5ewag4jUs4npfbK";
+   auto tx = transfer_tok( N(alice1111111), N(cointreasury), core_sym::from_string("10.0000"), memo);
+   BOOST_REQUIRE_EQUAL(success(), tx);
+
+   // verify that cointreasury's free RAM did not get less
+   auto ram_usage_after = rlm.get_account_ram_usage(N(cointreasury));
+   rlm.get_account_limits(N(cointreasury), ram_limit_after, unused, unused);
+   int64_t free_ram_after = ram_limit_after - ram_usage_after;
+   BOOST_REQUIRE(free_ram_after >= free_ram_before);
+} FC_LOG_AND_RETHROW()
+
 BOOST_AUTO_TEST_SUITE_END()

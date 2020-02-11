@@ -142,7 +142,8 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
   asset net;
   asset ram;
   asset fee;
-  const asset ram_replace_amount = buyrambytes(256);
+  //FIXME: shouldn't we only need 400 bytes?
+  const asset ram_replace_amount = buyrambytes(950);
   if(plan_id == 1) {
     eosio::check(quantity.amount >= 20000, "Price too low");
     cpu = asset(2000, EOS_S);

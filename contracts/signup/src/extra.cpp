@@ -1,5 +1,5 @@
-#include "signup.hpp"
-#include "abieos_numeric.hpp"
+#include "../include/signup/signup.hpp"
+#include "../include/signup/abieos_numeric.hpp"
 
 asset buyrambytes(uint32_t bytes) {
   eosiosystem::rammarket market(name("eosio"), name("eosio").value);

@@ -14,6 +14,7 @@ using namespace eosio;
 const symbol EOS_S = symbol("EOS", 4);
 const symbol RAMCORE_S = symbol("RAMCORE", 4);
 const symbol RAM_S = symbol("RAM", 0);
+uint32_t refund_delay_sec = 3*24*3600;
 
 struct [[eosio::table, eosio::contract("eosio.system")]] delegated_bandwidth {
   name          from;
@@ -52,6 +53,7 @@ CONTRACT signup : public eosio::contract {
     const name PARTNER = name("cryptobank24");
     array<char, 33> owner_pubkey_char;
     array<char, 33> active_pubkey_char;
+    void self_refund();
 
   public:
     using contract::contract;

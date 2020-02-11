@@ -8,21 +8,24 @@ void signup::notify(name new_account) {
   require_recipient(PARTNER);
 }
 
-// Trigger manual refund
-// TODO: auto trigger refund in claim(), if available
-void signup::refund() {
-  uint32_t refund_delay_sec = 3*24*3600;
-  auto refunds = refunds_table(name("eosio"), _self.value);
-  auto itr = refunds.find(_self.value);
-  eosio::check(itr != refunds.end(), "No refund request found.");
-  eosio::check(itr->request_time + seconds(refund_delay_sec) <= current_time_point(), "Refund is not available yet.");
-
+void signup::self_refund() {
   action(
     permission_level{ get_self(), "active"_n },
     "eosio"_n,
     "refund"_n,
     std::make_tuple(_self)
   ).send();
+}
+
+// Trigger manual refund
+// TODO: auto trigger refund in claim(), if available
+void signup::refund() {
+  auto refunds = refunds_table(name("eosio"), _self.value);
+  auto itr = refunds.find(_self.value);
+  eosio::check(itr != refunds.end(), "No refund request found.");
+  eosio::check(itr->request_time + seconds(refund_delay_sec) <= current_time_point(), "Refund is not available yet.");
+
+  self_refund();
 }
 
 // Claim staked resources
@@ -33,6 +36,17 @@ void signup::claim(name account_name) {
 
   eosio::check(itr->to == account_name, "No stake found for this account.");
   if(itr->to == account_name) {
+    /*
+    //FIXME: this does not work within 1 transaction, we need to call refund() first, otherwise the balance might be overdrawn
+    // trigger refund, if available
+    auto refunds = refunds_table(name("eosio"), _self.value);
+    auto itr2 = refunds.find(_self.value);
+    if(itr2 == refunds.end() && itr2->request_time + seconds(refund_delay_sec) > current_time_point()) {
+      // claimable refund if available and ready
+      self_refund();
+    }
+    */
+
     // undelegate reserved resources
     action(
       permission_level{ get_self(), "active"_n },
@@ -41,7 +55,14 @@ void signup::claim(name account_name) {
       std::make_tuple(_self, account_name, itr->net_weight, itr->cpu_weight)
     ).send();
 
-    // transfer same amount of liquid tokens to owner
+    // transfer same amount of stake to owner
+    action(
+      permission_level{ get_self(), "active"_n },
+      "eosio"_n,
+      "delegatebw"_n,
+      std::make_tuple(_self, account_name, itr->net_weight, itr->cpu_weight, 1)
+    ).send();
+    /*
     asset sum = asset(itr->net_weight.amount + itr->cpu_weight.amount, EOS_S);
     action(
       permission_level{ get_self(), "active"_n },
@@ -49,6 +70,7 @@ void signup::claim(name account_name) {
       "transfer"_n,
       std::make_tuple(_self, account_name, sum, std::string("Claim reserved resources"))
     ).send();
+    */
   }
 }
 
@@ -171,7 +193,7 @@ void signup::on_transfer( name from, name to, asset quantity, string memo ) {
     std::make_tuple(_self, _self, ram_replace_amount)
   ).send();
 
-  // delegate and transfer cpu and net
+  // delegate cpu and net
   action(
     permission_level{ get_self(), "active"_n },
     "eosio"_n,
